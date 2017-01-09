@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Map</title>
+   <link rel="stylesheet" href="css/style.css">
+ </head>
+
+ <body>
+
+   <div class="container">
+   <div id="map" class="map-container"></div>
+   <div class="sidebar">
+      <div>
+         <input id="show-listings" type="button" value="Show Listings">
+          <input id="hide-listings" type="button" value="Hide Listings">
+      </div>
+         <p>search: <input placeholder="Search…" type="search"data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
+            <p>Click a location</p>
+                <ul class="sidebar-list" data-bind="foreach: filteredItems">
+                        <li data-bind= "text: title, click: $parent.openInfo"></li>
+                </ul>
+      <div class="wikipedia-container">
+          <h3>Wikipedia Links</h3>
+                <li>
+                  <a href="https://en.wikipedia.org/wiki/Mysore">Mysore</a>
+                </li>
+      </div>
+        <ul class="sidebar-list" data-bind= "foreach: articleList">
+          <a data-bind="attr:{href:url}, text: content" id="wiki-content"></a>
+        </ul>
+    </div>
+  </div>
+    <!-- Load the JS API ASYNCHRONOUSLY below -->
+    <script src="lib/knockout-3.4.1.js"></script>
+    <script src="lib/jquery.min.js"></script>
+    <script src="app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiBGa9ekaOiTY9FrvHsROeIKhmvb0HlCo&v=3&callback=initMap">async defer></script>
+
+ </body>
+</html>
