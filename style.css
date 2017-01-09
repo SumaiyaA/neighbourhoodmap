@@ -1,0 +1,50 @@
+html,
+body {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    width: 100%;
+    background-color: #a5cecd;
+    color: #103949;
+}
+#map {
+    width: 75%;
+    height: 95%;
+    border: 1px solid red;
+    position: absolute;
+}
+.sidebar {
+    width: 25%;
+    height: 100%;
+    border: 1px;
+    padding-right: 1rem;
+
+}
+.map-container {
+    bottom: 10px;
+    height: 100%;
+    left: 280px;
+    position: absolute;
+    right: 0px;
+}
+.sidebar-list li {
+    padding: 5px;
+    cursor: pointer;
+}
+.wikipedia-container {
+    float: left;
+    width: 100%;
+    padding: 10px;
+    margin-right: 10px;
+}
+@media (max-width: 600px) {
+    .sidebar {
+        width: 100%;
+    }
+    .sidebar-list {
+        height: 0;
+        opacity: 0;
+    }
+    #map {
+        width: 100%;
+    }
+}
