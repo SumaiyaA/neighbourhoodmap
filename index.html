@@ -4,7 +4,53 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <title>Map</title>
-   <link rel="stylesheet" href="css/style.css">
+   <style type="text/css">
+   html,
+   body {
+       font-family: Arial, sans-serif;
+       height: 100%;
+       width: 100%;
+       background-color: #ff00ff;
+       color: #103949;
+   }
+   #map {
+       width: 75%;
+       height: 95%;
+       border: 1px solid #ff1a1a;
+       position: absolute;
+   }
+   .sidebar {
+       width: 25%;
+       height: 100%;
+       border: 1px;
+   }
+   .map-container {
+       bottom: 10px;
+       height: 100%;
+       left: 280px;
+       position: absolute;
+       right: 0px;
+   }
+   .sidebar-list li {
+       padding: 2px;
+       cursor: pointer;
+   }
+
+   @media (max-width: 600px) {
+       .sidebar {
+           width: 100%;
+       }
+       .sidebar-list {
+           height: 0;
+           opacity: 0;
+       }
+       #map {
+           width: 100%;
+       }
+   }
+
+   </style>
+
  </head>
 
  <body>
@@ -21,15 +67,6 @@
                 <ul class="sidebar-list" data-bind="foreach: filteredItems">
                         <li data-bind= "text: title, click: $parent.openInfo"></li>
                 </ul>
-      <div class="wikipedia-container">
-          <h3>Wikipedia Links</h3>
-                <li>
-                  <a href="https://en.wikipedia.org/wiki/Mysore">Mysore</a>
-                </li>
-      </div>
-        <ul class="sidebar-list" data-bind= "foreach: articleList">
-          <a data-bind="attr:{href:url}, text: content" id="wiki-content"></a>
-        </ul>
     </div>
   </div>
     <!-- Load the JS API ASYNCHRONOUSLY below -->
