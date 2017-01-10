@@ -1,4 +1,3 @@
-//Model
 var locationList = [{
         title: 'Infosys Limited',
         address: 'No.350, Hebbal Electronics City',
@@ -48,6 +47,7 @@ var locationList = [{
         }
     }
 ];
+
 //Model
 var map;
 //create the blank array for all listing markers
@@ -110,6 +110,7 @@ function initMap() {
         });
 
     }
+    // show and hide listing function
     document.getElementById('show-listings').addEventListener('click', showListings);
     document.getElementById('hide-listings').addEventListener('click', hideListings);
 
@@ -119,13 +120,28 @@ function initMap() {
     function populateInfoWindow(marker, infowindow) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
-            infowindow.setContent('<div>' + marker.title + '</div>');
+            infowindow.setContent('');
             infowindow.marker = marker;
-            infowindow.open(map, marker);
-
             // Make sure the marker property is cleared if the infowindow is closed.
             infowindow.addListener('closeclick', function() {
                 infowindow.marker = null;
+            });
+
+            //third party API wikipedia ajax request.
+            var wikiURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+            $.ajax({
+                url: wikiURL,
+                dataType: "jsonp"
+            }).done(function(response) {
+                var articleStr = response[1];
+                var URL = 'http://en.wikipedia.org/wiki/' + articleStr;
+                infowindow.setContent('<div>' + marker.title + '</div><br><a href ="' + URL + '">' + URL + '</div>');
+                // Open the infowindow on the correct marker.
+                infowindow.open(map, marker);
+                console.log(URL);
+                // error handling for jsonp requests with fail method.
+            }).fail(function(jqXHR, textStatus) {
+                alert("failed to load wikipedia resources");
             });
         }
     }
@@ -162,7 +178,6 @@ function initMap() {
         return markerImage;
     }
 }
-
 //show all markers
 function markervisible() {
     for (var i = 0; i < markers.length; i++) {
@@ -170,6 +185,8 @@ function markervisible() {
     }
 }
 
+
+//View Model
 var Location = function(data) {
     this.title = ko.observable(data.title);
     this.address = ko.observable(data.address);
@@ -177,14 +194,14 @@ var Location = function(data) {
     this.marker = ko.observable(data.marker);
 };
 
-//View Model
 var ViewModel = function() {
     var self = this;
-    this.filter = ko.observable('');
-    self.locations = ko.observableArray([]);
-    locationList.forEach(function(location) {
-        self.locations.push(new Location(location));
+    self.places = ko.observableArray();
+    self.locations = ko.observableArray(locationList);
+    locationList.forEach(function(match) {
+        self.places.push(new Location(match));
     });
+    self.filter = ko.observable('');
     // function for filtering using knockout
     self.filteredItems = ko.computed(function() {
         var filter = self.filter().toLowerCase();
@@ -193,50 +210,15 @@ var ViewModel = function() {
             return self.locations();
         } else {
             return ko.utils.arrayFilter(locationList, function(item) {
-                if (item.title.toLowerCase().indexOf(filter) === 0) {
-                    item.marker.setVisible(true);
-                    return true;
-                } else {
-                    item.marker.setVisible(false);
-                    return false;
-                }
+                var match = item.title.toLowerCase().indexOf(filter) === 0;
+                item.marker.setVisible(match);
+                return match;
             });
         }
-    });
-
-    self.openInfo = function(locationList) {
-          google.maps.event.trigger(Location.marker, 'click');
-        };
-
-
-    self.articleList = ko.observableArray([]);
-
-    function article(content, url) {
-        var self = this;
-        self.content = content;
-        self.url = url;
-    }
-    wikiFill = function(wikiTitle) {
-        self.articleList([]);
-        wikiURL = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityStr + '&format=json&callback=wikiCallback';
-        var wikiRequestTimeout = setTimeout(function() {
-            alert("failed to get Wikipedia resources");
-        }, 8000);
-
-        $.ajax({
-            url: wikiURL,
-            dataType: "jsonp",
-            success: function(response) {
-                self.articleList('');
-                var articleList = response[1];
-                for (var i = 0; i < articleList.length; i++) {
-                    articleStr = articleList[i];
-                    var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                    self.articleList.push(new article(articleStr, url));
-                }
-                clearTimeout(wikiRequestTimeout);
-            }
-        });
+    }, self);
+    // To click the sidebar List
+    self.openInfo = function(match) {
+        google.maps.event.trigger(match.marker, 'click');
     };
 };
 ko.applyBindings(new ViewModel());
