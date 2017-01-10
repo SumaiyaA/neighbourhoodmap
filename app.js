@@ -204,7 +204,7 @@ var ViewModel = function() {
         }
     });
 
-    self.openInfo = function(location) {
+    self.openInfo = function(locationList) {
           google.maps.event.trigger(Location.marker, 'click');
         };
 
