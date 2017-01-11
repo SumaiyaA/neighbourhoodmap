@@ -2,78 +2,37 @@
 <html lang="en">
  <head>
    <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <title>Map</title>
-   <style type="text/css">
-   html,
-   body {
-       font-family: Arial, sans-serif;
-       height: 100%;
-       width: 100%;
-       background-color: #ff00ff;
-       color: #103949;
-   }
-   #map {
-       width: 75%;
-       height: 95%;
-       border: 1px solid #ff1a1a;
-       position: absolute;
-   }
-   .sidebar {
-       width: 25%;
-       height: 100%;
-       border: 1px;
-   }
-   .map-container {
-       bottom: 10px;
-       height: 100%;
-       left: 280px;
-       position: absolute;
-       right: 0px;
-   }
-   .sidebar-list li {
-       padding: 2px;
-       cursor: pointer;
-   }
-
-   @media (max-width: 600px) {
-       .sidebar {
-           width: 100%;
-       }
-       .sidebar-list {
-           height: 0;
-           opacity: 0;
-       }
-       #map {
-           width: 100%;
-       }
-   }
-
-   </style>
+   <link rel="stylesheet" href="css/style.css">
 
  </head>
 
  <body>
 
    <div class="container">
-   <div id="map" class="map-container"></div>
-   <div class="sidebar">
-      <div>
-         <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
-      </div>
-         <p>search: <input placeholder="Search…" type="search"data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
-            <p>Click a location</p>
-                <ul class="sidebar-list" data-bind="foreach: filteredItems">
+        <header>
+               <h1>My Favourite Locations</h1>
+        </header>
+            <div>
+                <div class="sidebar">
+                     <p>Search: <input placeholder="Search…" type="search" class="searchbar" data-bind="value: filter, valueUpdate: 'afterkeydown'" /></p>
+                          <p>Click a location</p>
+                 <hr>
+                      <ul class="list" data-bind="foreach: filteredItems">
                         <li data-bind= "text: title, click: $parent.openInfo"></li>
-                </ul>
-    </div>
-  </div>
-    <!-- Load the JS API ASYNCHRONOUSLY below -->
+                      </ul>
+                </div>
+             </div>
+         <main id="map" class="map-container"></main>
+      </div>
+
     <script src="lib/knockout-3.4.1.js"></script>
     <script src="lib/jquery.min.js"></script>
     <script src="app.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiBGa9ekaOiTY9FrvHsROeIKhmvb0HlCo&v=3&callback=initMap">async defer></script>
+    <!-- Load the JS API ASYNCHRONOUSLY below -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiBGa9ekaOiTY9FrvHsROeIKhmvb0HlCo&v=3&callback=initMap" onerror="mapError()"></script>
 
  </body>
 </html>
