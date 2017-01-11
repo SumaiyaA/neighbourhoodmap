@@ -7,6 +7,30 @@ var locationList = [{
         }
     },
     {
+        title: 'Lalitha Mahal',
+        address: 'Lalith Mahal Quatras, Mysuru',
+        location: {
+            lat: 12.298,
+            lng: 76.693
+        }
+    },
+    {
+        title: 'Mall of Mysore',
+        address: 'No.C-1, M.G. Road',
+        location: {
+            lat: 12.297827,
+            lng: 76.664432
+        }
+    },
+    {
+        title: 'Maharajas College',
+        address: '292, K.G Koppal, Chamrajpura',
+        location: {
+            lat: 12.305352,
+            lng: 76.640606
+        }
+    },
+    {
         title: 'Palace',
         address: 'Agrahara, Chamrajpura',
         location: {
@@ -20,30 +44,6 @@ var locationList = [{
         location: {
             lat: 12.302357,
             lng: 76.665307
-        }
-    },
-    {
-        title: 'City Bus Stand',
-        address: '1201, New kantharaj Urs Rd, Siddhartha Nagar, Chamarajpuram Mohalla, Lakshmipuram',
-        location: {
-            lat: 12.29581,
-            lng: 76.639381
-        }
-    },
-    {
-        title: 'Sand Sculpture Museum',
-        address: 'Mysore, KC layout',
-        location: {
-            lat: 12.295005,
-            lng: 76.682179
-        }
-    },
-    {
-        title: 'Tipu Sultan Park',
-        address: '2nd Stage, Rajiv Nagar, Mysuru',
-        location: {
-            lat: 12.339654,
-            lng: 76.683029
         }
     }
 ];
@@ -63,7 +63,8 @@ function initMap() {
 
     //Initialize the InfoWindow
     var largeInfoWindow = new google.maps.InfoWindow();
-
+    //Applying bounds inorder to limit the display of mainLocations on the map
+    var bounds = new google.maps.LatLngBounds();
     // Style the markers a bit. This will be our listing marker icon.
     var defaultIcon = makeMarkerIcon('0091ff');
     // Create a "highlighted location" marker color for when the user mouses over the marker.
@@ -77,7 +78,6 @@ function initMap() {
         createMarker(title, location, address);
     }
 
-
     function createMarker(title, location, address) {
         //create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
@@ -87,7 +87,7 @@ function initMap() {
             title: title,
             address: address,
             icon: defaultIcon,
-            animation: google.maps.Animation.BOUNCE,
+            animation: google.maps.Animation.DROP,
             id: i
         });
 
@@ -97,6 +97,11 @@ function initMap() {
         Location.marker = marker;
         //create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
+            var self = this;
+            self.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function() {
+                self.setAnimation(null);
+            }, 2500);
             populateInfoWindow(this, largeInfoWindow);
         });
 
@@ -108,11 +113,9 @@ function initMap() {
         marker.addListener('mouseout', function() {
             this.setIcon(defaultIcon);
         });
-
+        bounds.extend(markers[i].position);
+        map.fitBounds(bounds);
     }
-    // show and hide listing function
-    document.getElementById('show-listings').addEventListener('click', showListings);
-    document.getElementById('hide-listings').addEventListener('click', hideListings);
 
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
@@ -135,32 +138,15 @@ function initMap() {
             }).done(function(response) {
                 var articleStr = response[1];
                 var URL = 'http://en.wikipedia.org/wiki/' + articleStr;
-                infowindow.setContent('<div>' + marker.title + '</div><br><a href ="' + URL + '">' + URL + '</div>');
+                infowindow.setContent('<div>' + marker.title + '</div><br><a href ="' + URL + '">' + URL + '</a>');
                 // Open the infowindow on the correct marker.
                 infowindow.open(map, marker);
                 console.log(URL);
                 // error handling for jsonp requests with fail method.
             }).fail(function(jqXHR, textStatus) {
+                infowindow.setContent('<h5>wikipedia data is unavailable.</h5>');
                 alert("failed to load wikipedia resources");
             });
-        }
-    }
-
-    //This function will loop through the markers array and display them all.
-    function showListings() {
-        // //Applying bounds inorder to limit the display of mainLocations on the map
-        var bounds = new google.maps.LatLngBounds();
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(map);
-            //extend the boundaries of the map for each marker.
-            bounds.extend(markers[i].position);
-        }
-        map.fitBounds(bounds);
-    }
-
-    function hideListings() {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
         }
     }
 
@@ -178,6 +164,28 @@ function initMap() {
         return markerImage;
     }
 }
+
+//Erro handling method
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+    var string = msg.toLowerCase();
+    var substring = "script error";
+    if (string.indexOf(substring) > -1) {
+        alert('Script Error: See Browser Console for Detail');
+    } else {
+        var message = [
+            'Message: ' + msg,
+            'URL: ' + url,
+            'Line: ' + lineNo,
+            'Column: ' + columnNo,
+            'Error object: ' + JSON.stringify(error)
+        ].join(' - ');
+
+        alert(message);
+    }
+
+    return false;
+};
+
 //show all markers
 function markervisible() {
     for (var i = 0; i < markers.length; i++) {
@@ -185,15 +193,14 @@ function markervisible() {
     }
 }
 
-
-//View Model
 var Location = function(data) {
-    this.title = ko.observable(data.title);
-    this.address = ko.observable(data.address);
-    this.location = ko.observable(data.location);
-    this.marker = ko.observable(data.marker);
+    this.title = data.title;
+    this.address = data.address;
+    this.location = data.location;
+    this.marker = data.marker;
 };
 
+//View Model
 var ViewModel = function() {
     var self = this;
     self.places = ko.observableArray();
@@ -216,6 +223,7 @@ var ViewModel = function() {
             });
         }
     }, self);
+    
     // To click the sidebar List
     self.openInfo = function(match) {
         google.maps.event.trigger(match.marker, 'click');
