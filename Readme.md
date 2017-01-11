@@ -8,7 +8,7 @@
 
 Download the project from the URL given below and save the files in a folder on your computer,unzip it and open index.html in Chrome to start the project.
 
-https://github.com/SumaiyaA/NeighbourhoodMapproject
+https://github.com/SumaiyaA/neighbourhoodmap
 
 #### Tools
 
