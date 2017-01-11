@@ -6,45 +6,83 @@ body {
     background-color: #a5cecd;
     color: #103949;
 }
+
+.container {
+    height: 100%;
+    position: relative;
+}
+
 #map {
-    width: 75%;
-    height: 95%;
+    width: 70%;
+    height: 90%;
     border: 1px solid red;
     position: absolute;
 }
-.sidebar {
-    width: 25%;
-    height: 100%;
-    border: 1px;
-    padding-right: 1rem;
 
-}
 .map-container {
-    bottom: 10px;
-    height: 100%;
-    left: 280px;
-    position: absolute;
+    bottom: 0px;
+    top: 30px;
+    left: 250px;
     right: 0px;
 }
-.sidebar-list li {
-    padding: 5px;
+
+h1 {
+    color: #525454;
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.sidebar {
+    width: 20%;
+    height: auto;
+    border: 1px;
     cursor: pointer;
 }
-.wikipedia-container {
-    float: left;
-    width: 100%;
-    padding: 10px;
-    margin-right: 10px;
-}
+
 @media (max-width: 600px) {
-    .sidebar {
-        width: 100%;
-    }
-    .sidebar-list {
-        height: 0;
-        opacity: 0;
-    }
     #map {
-        width: 100%;
+        width: 60%;
+        height: 90%;
+    }
+
+    .sidebar {
+        width: 40%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .map-container {
+        bottom: 0px;
+        top: 30px;
+        left: 180px;
+        right: 0px;
     }
 }
+
+@media (max-width: 400px) {
+    #map {
+        width: 55%;
+    }
+
+    .sidebar {
+        width: 40%;
+        padding-right: 0px;
+    }
+
+    .map-container {
+        bottom: 0px;
+        left: 120px;
+        width: 50px;
+    }
+
+    .searchbar {
+        width: 50px;
+    }
+
+    .list {
+        padding-left: 0px;
+        cursor: pointer;
+    }
+}
+
