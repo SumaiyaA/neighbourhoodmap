@@ -1,4 +1,12 @@
 var locationList = [{
+        title: 'Chamundi Hill',
+        address: 'Mysuru',
+        location: {
+            lat: 12.275255,
+            lng: 76.670147
+        }
+    },
+    {
         title: 'Infosys Limited',
         address: 'No.350, Hebbal Electronics City',
         location: {
@@ -23,23 +31,15 @@ var locationList = [{
         }
     },
     {
-        title: 'Maharajas College',
-        address: '292, K.G Koppal, Chamrajpura',
-        location: {
-            lat: 12.305352,
-            lng: 76.640606
-        }
-    },
-    {
-        title: 'Palace',
-        address: 'Agrahara, Chamrajpura',
+        title: 'Mysore Palace',
+        address: 'Agrahara, Chamrajpura, Mysuru',
         location: {
             lat: 12.303889,
             lng: 76.654444
         }
     },
     {
-        title: 'Zoo',
+        title: 'Mysore Zoo',
         address: 'Zoo Road, Indira Nagar, Ittige Gudu, Near Mysuru Mall',
         location: {
             lat: 12.302357,
@@ -166,25 +166,10 @@ function initMap() {
 }
 
 //Erro handling method
-window.onerror = function(msg, url, lineNo, columnNo, error) {
-    var string = msg.toLowerCase();
-    var substring = "script error";
-    if (string.indexOf(substring) > -1) {
-        alert('Script Error: See Browser Console for Detail');
-    } else {
-        var message = [
-            'Message: ' + msg,
-            'URL: ' + url,
-            'Line: ' + lineNo,
-            'Column: ' + columnNo,
-            'Error object: ' + JSON.stringify(error)
-        ].join(' - ');
-
-        alert(message);
-    }
-
-    return false;
-};
+//Show error message when Google Map is unavailable
+function mapError() {
+    alert("The map could not be loaded.");
+}
 
 //show all markers
 function markervisible() {
@@ -223,10 +208,11 @@ var ViewModel = function() {
             });
         }
     }, self);
-    
+
     // To click the sidebar List
     self.openInfo = function(match) {
         google.maps.event.trigger(match.marker, 'click');
     };
 };
 ko.applyBindings(new ViewModel());
+
